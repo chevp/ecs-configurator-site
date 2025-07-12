@@ -159,6 +159,13 @@
       background-color: var(--color-accent-hover);
     }
 
+    .download-button.disabled {
+      background-color: #3a4555;
+      cursor: not-allowed;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
     footer {
       background-color: #0a0f1c;
       color: #6b7280;
@@ -232,7 +239,7 @@
   <section class="download-section">
     <h2>Download the Windows Installer</h2>
     <p>Get started by installing ECS Studio to explore and edit your <code>.ecscfg</code> files.</p>
-    <a class="download-button" href="installer/ECSStudioSetup.zip" download>
+    <a class="download-button disabled" href="installer/ECSStudioSetup.zip" download>
       <i class="fas fa-download"></i> Download ECSStudioSetup.zip
     </a>
   </section>
