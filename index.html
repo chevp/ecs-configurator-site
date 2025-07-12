@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ECS Studio – Structured Asset Management</title>
+  <style>
+    :root {
+      --color-bg: #070c1a;
+      --color-section: #0d1225;
+      --color-accent: #1e90ff;
+      --color-accent-hover: #1b78d3;
+      --color-text: #e5e7eb;
+      --color-muted: #9ca3af;
+      --color-border: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #0b1229, #0a0f1c);
+      color: var(--color-text);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Snowflake animation */
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      z-index: 0;
+      color: rgba(255, 255, 255, 0.15);
+      font-size: 1.2rem;
+      user-select: none;
+      animation-name: fall;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    header.hero {
+      background: linear-gradient(to right, #0d1f40, #112c57);
+      color: white;
+      padding: 100px 20px 80px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    header.hero h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    header.hero p {
+      font-size: 18px;
+      color: #cbd5e1;
+    }
+
+    .section {
+      max-width: 960px;
+      margin: auto;
+      padding: 60px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section h2 {
+      font-size: 28px;
+      color: var(--color-accent);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .section p {
+      color: var(--color-muted);
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature-card {
+      background-color: var(--color-section);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 24px;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+      position: relative;
+    }
+
+    .feature-card:hover {
+      border-color: var(--color-accent);
+      transform: translateY(-4px);
+    }
+
+    .feature-card h3 {
+      color: var(--color-text);
+      font-size: 18px;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: var(--color-muted);
+      font-size: 14px;
+    }
+
+    .download-section {
+      background-color: var(--color-section);
+      padding: 60px 20px;
+      text-align: center;
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      position: relative;
+      z-index: 1;
+    }
+
+    .download-section h2 {
+      color: var(--color-accent);
+      font-size: 26px;
+    }
+
+    .download-button {
+      display: inline-block;
+      background-color: var(--color-accent);
+      color: white;
+      padding: 14px 30px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 6px;
+      margin-top: 20px;
+      transition: background-color 0.2s ease;
+    }
+
+    .download-button:hover {
+      background-color: var(--color-accent-hover);
+    }
+
+    footer {
+      background-color: #0a0f1c;
+      color: #6b7280;
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 14px;
+      border-top: 1px solid var(--color-border);
+      z-index: 1;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Snowflakes -->
+  <script>
+    for (let i = 0; i < 40; i++) {
+      const snowflake = document.createElement('div');
+      snowflake.className = 'snowflake';
+      snowflake.textContent = '❄';
+      snowflake.style.left = Math.random() * 100 + 'vw';
+      snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+      snowflake.style.animationDuration = (Math.random() * 20 + 10) + 's';
+      snowflake.style.animationDelay = (Math.random() * 10) + 's';
+      document.body.appendChild(snowflake);
+    }
+  </script>
+
+  <header class="hero">
+    <h1>ECS Studio</h1>
+    <p>Visual configuration and structured asset management for ECS-based systems</p>
+  </header>
+
+  <section class="section">
+    <h2>Why ECS Studio?</h2>
+    <div class="features">
+      <div class="feature-card">
+        <h3>Structured Entity Editing</h3>
+        <p>Manage complex entity-component hierarchies visually with intuitive tools and nesting support.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Preview Support</h3>
+        <p>Preview assets like <code>.png</code> images and <code>.gltf</code> 3D models directly within the UI.</p>
+      </div>
+      <div class="feature-card">
+        <h3>.ecscfg Compatibility</h3>
+        <p>Open, edit, and validate structured <code>.ecscfg</code> config files used in ECS pipelines.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Portable & Fast</h3>
+        <p>MSI-based Windows installer, native speed, no extra dependencies – ready to run.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>How It Works</h2>
+    <p style="text-align: center;">
+      ECS Studio is built for game developers, technical artists, and engineers working with structured, data-driven configurations.  
+      Define, link, and preview assets in real-time – all inside a clean, unified interface.
+    </p>
+  </section>
+
+  <section class="download-section">
+    <h2>Download the Windows Installer</h2>
+    <p>Get started by installing ECS Studio to explore and edit your <code>.ecscfg</code> files.</p>
+    <a class="download-button" href="installer/ECSStudioSetup.zip" download>
+      ⬇ Download ECSStudioSetup.zip
+    </a>
+  </section>
+
+<footer>
+  &copy; 2025 ECS Studio. All rights reserved.
+  &nbsp;|&nbsp;
+  <a href="impressum.html" style="color: #6b7280; text-decoration: none;">Impressum</a>
+</footer>
+
+</body>
+</html>
