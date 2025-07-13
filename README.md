@@ -8,6 +8,10 @@ This repository contains the public landing page and download site for **ECS Stu
 
 👉 [Visit ECS Studio Website](https://chevp.github.io/ecs-studio-site/)
 
+## Preview
+
+![ECS Studio](assets/home_entities_default.png)
+
 ## 📁 Contents
 
 - `index.html` – main landing page  
