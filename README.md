@@ -1,4 +1,4 @@
-# ECS Studio – Website
+# ❄️ ECS Studio – Website
 
 This repository contains the public landing page and download site for **ECS Studio**.
 
