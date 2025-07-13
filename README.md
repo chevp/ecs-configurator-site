@@ -10,7 +10,7 @@ This repository contains the public landing page and download site for **ECS Stu
 
 ## Preview
 
-![ECS Studio](assets/home_entities_default.png)
+![ECS Studio](assets/ecs-studio-screenshot.png)
 
 ## 📁 Contents
 
