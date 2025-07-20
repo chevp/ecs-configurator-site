@@ -1,16 +1,16 @@
-# ❄️ ECS Studio – Website
+# ❄️ ECS Configurator – Website
 
-This repository contains the public landing page and download site for **ECS Studio**.
+This repository contains the public landing page and download site for **ECS Configurator**.
 
-**ECS Studio** is a visual editor for structured entity-component system (ECS) assets with support for `.ecscfg` configuration files, component previews (e.g. `.png`, `.gltf`), and hierarchical asset structures.
+**ECS Configurator** is a visual editor for structured entity-component system (ECS) assets with support for `.ecscfg` configuration files, component previews (e.g. `.png`, `.gltf`), and hierarchical asset structures.
 
 ## 🌐 Live Site
 
-👉 [Visit ECS Studio Website](https://chevp.github.io/ecs-studio-site/)
+👉 [Visit ECS Configurator Website](https://chevp.github.io/ecs-configurator-site/)
 
 ## Preview
 
-![ECS Studio](assets/ecs-studio-screenshot.png)
+![ECS Configurator](assets/ecs-studio-screenshot.png)
 
 ## 📁 Contents
 
@@ -26,7 +26,7 @@ The latest Windows installer is available directly on the site via the **Downloa
 ## ⚠️ Notes
 
 This repository contains only the website.  
-The actual ECS Studio application source code is private and maintained separately.
+The actual ECS Configurator application source code is private and maintained separately.
 
 ## 📄 License
 
