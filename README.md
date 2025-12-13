@@ -10,7 +10,7 @@ This repository contains the public landing page and download site for **ECS Con
 
 ## Preview
 
-![ECS Configurator](assets/ecs-studio-screenshot.png)
+![ECS Configurator](assets/ecs-studio-preview.png)
 
 ## 📁 Contents
 
