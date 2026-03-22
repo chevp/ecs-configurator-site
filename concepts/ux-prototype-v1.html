@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECS Configurator – Visual Configuration for ECS-Based Systems</title>
+  <link rel="icon" href="../assets/ecs-studio-icon256.jpg" type="image/jpeg" sizes="256x256">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #090e1c;
+      --color-surface: #0f1629;
+      --color-surface-elevated: #151d35;
+      --color-accent: #3b82f6;
+      --color-accent-bright: #60a5fa;
+      --color-accent-glow: rgba(59, 130, 246, 0.15);
+      --color-accent-secondary: #818cf8;
+      --color-text: #f1f5f9;
+      --color-text-secondary: #94a3b8;
+      --color-text-muted: #64748b;
+      --color-border: #1e293b;
+      --color-border-hover: #334155;
+      --font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+      --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.08);
+      --max-width: 1120px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(9, 14, 28, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--color-border);
+      transition: background var(--transition);
+    }
+
+    .navbar-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 64px;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--color-text);
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .navbar-brand img {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+    }
+
+    .navbar-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .navbar-links a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+
+    .navbar-links a:hover {
+      color: var(--color-text);
+    }
+
+    .navbar-cta {
+      background: var(--color-accent);
+      color: white !important;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background var(--transition), transform var(--transition);
+    }
+
+    .navbar-cta:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      padding: 160px 24px 100px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--color-accent-glow);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-accent-bright);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      max-width: 720px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #f1f5f9 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2vw, 19px);
+      color: var(--color-text-secondary);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all var(--transition);
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: white;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary.disabled {
+      background: #1e293b;
+      color: var(--color-text-muted);
+      box-shadow: none;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-border-hover);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .hero-note {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+    .hero-note i {
+      margin-right: 4px;
+    }
+
+    /* ── Screenshot Showcase ── */
+    .showcase {
+      max-width: var(--max-width);
+      margin: -20px auto 0;
+      padding: 0 24px 80px;
+      position: relative;
+    }
+
+    .showcase-frame {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-card), var(--shadow-glow);
+    }
+
+    .showcase-frame img {
+      width: 100%;
+      display: block;
+    }
+
+    .showcase-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-lg);
+      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.3);
+      pointer-events: none;
+    }
+
+    /* ── Section Base ── */
+    .section {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      font-size: 17px;
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Feature Grid ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .feature-card:hover {
+      border-color: var(--color-border-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 20px;
+      background: var(--color-accent-glow);
+      color: var(--color-accent-bright);
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--color-text);
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--color-text-secondary);
+    }
+
+    /* ── How It Works (Alternating) ── */
+    .workflow-section {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .workflow-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      padding: 40px 0;
+    }
+
+    .workflow-item:not(:last-child) {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .workflow-item.reverse {
+      direction: rtl;
+    }
+
+    .workflow-item.reverse > * {
+      direction: ltr;
+    }
+
+    .workflow-text .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--color-accent-glow);
+      color: var(--color-accent);
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .workflow-text h3 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .workflow-text p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--color-text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .workflow-visual {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-card);
+    }
+
+    .workflow-visual img {
+      width: 100%;
+      display: block;
+    }
+
+    /* ── Tech Specs ── */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .spec-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 24px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      transition: border-color var(--transition);
+    }
+
+    .spec-item:hover {
+      border-color: var(--color-border-hover);
+    }
+
+    .spec-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      background: var(--color-surface-elevated);
+      color: var(--color-accent-bright);
+    }
+
+    .spec-text h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .spec-text p {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Use Cases ── */
+    .usecases-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .usecase-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+      transition: all var(--transition);
+    }
+
+    .usecase-card:hover {
+      border-color: var(--color-border-hover);
+      transform: translateY(-3px);
+    }
+
+    .usecase-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .usecase-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .usecase-card p {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      text-align: center;
+      padding: 100px 24px;
+      position: relative;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-box {
+      max-width: 640px;
+      margin: 0 auto;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 56px 40px;
+      box-shadow: var(--shadow-card), var(--shadow-glow);
+      position: relative;
+    }
+
+    .cta-box h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-box p {
+      color: var(--color-text-secondary);
+      font-size: 16px;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .cta-box .btn {
+      font-size: 16px;
+      padding: 16px 32px;
+    }
+
+    .cta-platform {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+    .cta-platform i {
+      margin-right: 4px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--color-border);
+      padding: 48px 24px;
+    }
+
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--color-text-muted);
+    }
+
+    .footer-left img {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      opacity: 0.6;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--color-text-secondary);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      border: none;
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .features-grid,
+      .usecases-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .workflow-item {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .workflow-item.reverse {
+        direction: ltr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .features-grid,
+      .specs-grid,
+      .usecases-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .navbar-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 130px 20px 60px;
+      }
+
+      .section {
+        padding: 60px 20px;
+      }
+
+      .cta-box {
+        padding: 40px 24px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    /* ── Scroll Animations ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="#" class="navbar-brand">
+        <img src="../assets/ecs-studio-icon256.jpg" alt="ECS Configurator Icon">
+        ECS Configurator
+      </a>
+      <ul class="navbar-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#specs">Technical Details</a></li>
+        <li><a href="#use-cases">Use Cases</a></li>
+        <li><a href="#download" class="navbar-cta"><i class="fas fa-download"></i> Download</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-badge">
+      <i class="fas fa-flask"></i>
+      Currently in Development
+    </div>
+    <h1>Visual Configuration for ECS-Based Systems</h1>
+    <p class="hero-subtitle">
+      Define, edit, and preview structured entity-component configurations
+      in a clean, unified interface — built for game developers and technical artists.
+    </p>
+    <div class="hero-actions">
+      <a href="#download" class="btn btn-primary disabled">
+        <i class="fab fa-windows"></i> Download for Windows
+      </a>
+      <a href="#features" class="btn btn-secondary">
+        <i class="fas fa-arrow-down"></i> Explore Features
+      </a>
+    </div>
+    <p class="hero-note">
+      <i class="fab fa-windows"></i> Windows only &middot; Free to use &middot; No account required
+    </p>
+  </section>
+
+  <!-- ── Screenshot Showcase ── -->
+  <div class="showcase fade-in">
+    <div class="showcase-frame">
+      <img src="../assets/ecs-studio-preview.png" alt="ECS Configurator – Application Preview">
+    </div>
+  </div>
+
+  <!-- ── Features ── -->
+  <section class="section" id="features">
+    <div class="section-header fade-in">
+      <span class="section-label">Features</span>
+      <h2>Everything You Need for ECS Configs</h2>
+      <p>A focused tool for managing structured, data-driven configurations used in ECS architectures.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-sitemap"></i>
+        </div>
+        <h3>Structured Entity Editing</h3>
+        <p>Manage complex entity-component hierarchies visually. Navigate nested structures with intuitive tree views and inline editing.</p>
+      </div>
+
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-eye"></i>
+        </div>
+        <h3>Asset Preview</h3>
+        <p>Preview <code>.png</code> images and <code>.gltf</code> 3D models directly within the editor — no need to switch between tools.</p>
+      </div>
+
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-file-code"></i>
+        </div>
+        <h3>.ecscfg File Format</h3>
+        <p>Open, edit, and validate structured <code>.ecscfg</code> configuration files designed for ECS-based pipelines.</p>
+      </div>
+
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <h3>Native Performance</h3>
+        <p>Built as a native Windows application — fast startup, low memory usage, and no runtime dependencies required.</p>
+      </div>
+
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-palette"></i>
+        </div>
+        <h3>Clean Interface</h3>
+        <p>A distraction-free, dark-themed interface designed for long editing sessions with clear visual hierarchy.</p>
+      </div>
+
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-box-open"></i>
+        </div>
+        <h3>Portable & Self-Contained</h3>
+        <p>Simple Windows installer with everything included. No extra dependencies, frameworks, or setup steps required.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── How It Works ── -->
+  <section class="workflow-section" id="how-it-works">
+    <div class="section" style="padding-bottom: 40px;">
+      <div class="section-header fade-in">
+        <span class="section-label">Workflow</span>
+        <h2>How It Works</h2>
+        <p>ECS Configurator streamlines the process of creating and editing structured configurations.</p>
+      </div>
+
+      <div class="workflow-item fade-in">
+        <div class="workflow-text">
+          <div class="step-number">1</div>
+          <h3>Open Your .ecscfg Files</h3>
+          <p>
+            Load your existing <code>.ecscfg</code> configuration files directly into the editor.
+            The structured format is parsed and displayed as a navigable entity tree.
+          </p>
+        </div>
+        <div class="workflow-visual">
+          <img src="../assets/ecs-studio-screenshot.png" alt="ECS Configurator – File Editing">
+        </div>
+      </div>
+
+      <div class="workflow-item reverse fade-in">
+        <div class="workflow-text">
+          <div class="step-number">2</div>
+          <h3>Edit Entities & Components</h3>
+          <p>
+            Modify entity hierarchies, add or remove components, and adjust property values —
+            all through a visual interface instead of editing raw text files.
+          </p>
+        </div>
+        <div class="workflow-visual">
+          <img src="../assets/ecs-studio-preview.png" alt="ECS Configurator – Entity Editing">
+        </div>
+      </div>
+
+      <div class="workflow-item fade-in">
+        <div class="workflow-text">
+          <div class="step-number">3</div>
+          <h3>Preview Assets In-Place</h3>
+          <p>
+            See referenced assets — images, 3D models — rendered directly in the configurator.
+            Validate your configurations visually before using them in your pipeline.
+          </p>
+        </div>
+        <div class="workflow-visual">
+          <img src="../assets/ecs-studio-preview.png" alt="ECS Configurator – Asset Preview">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Tech Specs ── -->
+  <section class="section" id="specs">
+    <div class="section-header fade-in">
+      <span class="section-label">Technical Details</span>
+      <h2>Built for the Job</h2>
+      <p>Purpose-built with performance and reliability in mind.</p>
+    </div>
+
+    <div class="specs-grid fade-in">
+      <div class="spec-item">
+        <div class="spec-icon"><i class="fab fa-windows"></i></div>
+        <div class="spec-text">
+          <h4>Windows Native</h4>
+          <p>Runs natively on Windows with no Electron or browser overhead.</p>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon"><i class="fas fa-feather"></i></div>
+        <div class="spec-text">
+          <h4>Lightweight</h4>
+          <p>Small installer size, fast startup, minimal resource usage.</p>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon"><i class="fas fa-cube"></i></div>
+        <div class="spec-text">
+          <h4>glTF Support</h4>
+          <p>Built-in 3D model preview for <code>.gltf</code> assets referenced in configs.</p>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon"><i class="fas fa-image"></i></div>
+        <div class="spec-text">
+          <h4>Image Preview</h4>
+          <p>Inline preview for <code>.png</code> and other image formats.</p>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="spec-text">
+          <h4>Validation</h4>
+          <p>Validates <code>.ecscfg</code> structure to catch errors before deployment.</p>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon"><i class="fas fa-box"></i></div>
+        <div class="spec-text">
+          <h4>Self-Contained</h4>
+          <p>No external runtimes or frameworks needed. Just install and use.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── Use Cases ── -->
+  <section class="section" id="use-cases">
+    <div class="section-header fade-in">
+      <span class="section-label">Who It's For</span>
+      <h2>Built for ECS Workflows</h2>
+      <p>Whether you're building games or data-driven systems — ECS Configurator fits your pipeline.</p>
+    </div>
+
+    <div class="usecases-grid fade-in">
+      <div class="usecase-card">
+        <span class="usecase-icon"><i class="fas fa-gamepad" style="color: var(--color-accent-bright);"></i></span>
+        <h3>Game Developers</h3>
+        <p>Define and manage game entities, components, and their relationships visually.</p>
+      </div>
+      <div class="usecase-card">
+        <span class="usecase-icon"><i class="fas fa-paint-brush" style="color: var(--color-accent-secondary);"></i></span>
+        <h3>Technical Artists</h3>
+        <p>Preview and validate assets within configuration contexts without leaving the tool.</p>
+      </div>
+      <div class="usecase-card">
+        <span class="usecase-icon"><i class="fas fa-cogs" style="color: #34d399;"></i></span>
+        <h3>Engine Engineers</h3>
+        <p>Build and iterate on structured configuration formats for custom ECS engines.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Download CTA ── -->
+  <section class="cta-section" id="download">
+    <div class="cta-box fade-in">
+      <h2>Get ECS Configurator</h2>
+      <p>
+        Download the Windows installer and start working with your <code>.ecscfg</code> files today.
+        Free to use — no account required.
+      </p>
+      <a href="../installer/ECSStudioSetup.zip" class="btn btn-primary disabled" download>
+        <i class="fas fa-download"></i> Download for Windows
+      </a>
+      <p class="cta-platform">
+        <i class="fas fa-info-circle"></i> Download is currently unavailable — coming soon.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-left">
+        <img src="../assets/ecs-studio-icon256.jpg" alt="ECS Configurator">
+        <span>&copy; 2025 ECS Configurator. All rights reserved.</span>
+      </div>
+      <div class="footer-links">
+        <a href="../impressum.html">Legal Notice</a>
+        <a href="mailto:bet843434@hotmail.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── Scroll Animation Script ── -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
